@@ -1,0 +1,16 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="FreshBite online food ordering internship project for Hamirpur, Himachal Pradesh"><title>Restaurants | FreshBite</title><link rel="stylesheet" href="style.css"></head><body><header><div class="container nav">
+<a class="logo" href="index.html">🍴 Fresh<span>Bite</span></a>
+<button class="menu-btn" aria-label="Menu">☰</button>
+<nav class="navlinks">
+<a class="" href="index.html">Home</a>
+<a class="active" href="restaurants.html">Restaurants</a>
+<a class="" href="menu.html">Menu</a>
+<a class="" href="about.html">About</a>
+<a class="" href="contact.html">Contact</a>
+<a href="auth.html">Login</a>
+<a class="cart-pill" href="cart.html">Cart (<span class="cart-count">0</span>)</a>
+</nav></div></header><main><section class="page-title"><div class="container"><div class="eyebrow">Discover</div><h1 style="font-size:3rem">Restaurants</h1><p class="lead">Explore curated demo restaurants serving different cuisines in the Hamirpur experience.</p></div></section><section class="section"><div class="container"><div class="filters"><input placeholder="Search restaurants or cuisine..." oninput="filterRestaurants(this.value)"></div><div id="restaurantGrid" class="grid"></div></div></section><script>function filterRestaurants(q){q=q.toLowerCase();document.querySelectorAll('#restaurantGrid .card').forEach(c=>c.style.display=c.innerText.toLowerCase().includes(q)?'':'none')}</script></main><footer><div class="container footer-grid">
+<div><h3>🍴 FreshBite</h3><p>Fresh food, simple ordering and a smooth delivery-style experience for Hamirpur.</p></div>
+<div><h3>Explore</h3><p><a href="restaurants.html">Restaurants</a></p><p><a href="menu.html">Menu</a></p><p><a href="cart.html">Cart</a></p></div>
+<div><h3>Support</h3><p><a href="about.html">About Us</a></p><p><a href="contact.html">Contact Us</a></p><p><a href="auth.html">Login/Register</a></p></div>
+</div><div class="container" style="margin-top:25px;border-top:1px solid #333;padding-top:15px"><p>© <span id="year"></span> FreshBite — Internship Project. Demo ordering only.</p></div></footer><div id="toast" class="toast"></div><script src="app.js"></script></body></html>

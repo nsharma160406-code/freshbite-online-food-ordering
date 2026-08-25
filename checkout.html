@@ -1,0 +1,16 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="FreshBite online food ordering internship project for Hamirpur, Himachal Pradesh"><title>Checkout | FreshBite</title><link rel="stylesheet" href="style.css"></head><body><header><div class="container nav">
+<a class="logo" href="index.html">🍴 Fresh<span>Bite</span></a>
+<button class="menu-btn" aria-label="Menu">☰</button>
+<nav class="navlinks">
+<a class="" href="index.html">Home</a>
+<a class="" href="restaurants.html">Restaurants</a>
+<a class="" href="menu.html">Menu</a>
+<a class="" href="about.html">About</a>
+<a class="" href="contact.html">Contact</a>
+<a href="auth.html">Login</a>
+<a class="cart-pill" href="cart.html">Cart (<span class="cart-count">0</span>)</a>
+</nav></div></header><main><section class="page-title"><div class="container"><div class="eyebrow">Almost there</div><h1 style="font-size:3rem">Checkout</h1><p class="lead">Enter a delivery address and choose a simulated payment method.</p></div></section><section class="section" style="padding-top:10px"><div class="container"><div class="card" style="padding:25px"><form id="checkoutForm" class="form-grid"><div class="form-group"><label>Full name</label><input class="form-control" required placeholder="Your name"></div><div class="form-group"><label>Phone</label><input class="form-control" required pattern="[0-9]{10}" placeholder="10-digit mobile number"></div><div class="form-group full"><label>Delivery address</label><textarea class="form-control" required placeholder="House/Street, Hamirpur, Himachal Pradesh"></textarea></div><div class="form-group"><label>Payment method</label><select class="form-control"><option>Cash on Delivery (Demo)</option><option>UPI (Simulated)</option><option>Card (Simulated)</option></select></div><div class="form-group"><label>Delivery time</label><select class="form-control"><option>ASAP • 30–40 min</option><option>45–60 min</option><option>Schedule for later</option></select></div><div class="form-group full"><label>Order total</label><h2 id="checkoutTotal">₹0</h2></div><div class="form-group full"><button class="btn btn-primary" type="submit">Place simulated order</button></div></form><div id="checkoutResult"></div><p class="small" style="margin-top:15px">No real payment is processed. This is a frontend internship demonstration.</p></div></div></section></main><footer><div class="container footer-grid">
+<div><h3>🍴 FreshBite</h3><p>Fresh food, simple ordering and a smooth delivery-style experience for Hamirpur.</p></div>
+<div><h3>Explore</h3><p><a href="restaurants.html">Restaurants</a></p><p><a href="menu.html">Menu</a></p><p><a href="cart.html">Cart</a></p></div>
+<div><h3>Support</h3><p><a href="about.html">About Us</a></p><p><a href="contact.html">Contact Us</a></p><p><a href="auth.html">Login/Register</a></p></div>
+</div><div class="container" style="margin-top:25px;border-top:1px solid #333;padding-top:15px"><p>© <span id="year"></span> FreshBite — Internship Project. Demo ordering only.</p></div></footer><div id="toast" class="toast"></div><script src="app.js"></script></body></html>
