@@ -1,6 +1,4 @@
-// ===============================
-// MOBILE MENU
-// ===============================
+alert("JavaScript is working!");
 const menuBtn = document.querySelector(".menu-btn");
 const navLinks = document.querySelector(".navlinks");
 
@@ -249,5 +247,7 @@ function updateCartCount() {
 // ===============================
 // START MENU
 // ===============================
+displayFoods();
+updateCartCount();
 displayFoods();
 updateCartCount();
