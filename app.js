@@ -242,6 +242,177 @@ function updateCartCount() {
         element.textContent = totalQuantity;
     });
 }
+// ===============================
+// CART PAGE
+// ===============================
+
+const cartItems = document.getElementById("cartItems");
+const subtotalElement = document.getElementById("subtotal");
+const totalElement = document.getElementById("total");
+
+function displayCart() {
+
+    if (!cartItems) return;
+
+    let cart =
+        JSON.parse(localStorage.getItem("freshbiteCart")) || [];
+
+    cartItems.innerHTML = "";
+
+    // Empty cart
+    if (cart.length === 0) {
+
+        cartItems.innerHTML = `
+            <div class="empty">
+                <h3>Your cart is empty 🛒</h3>
+                <p>Add some delicious food from the menu.</p>
+                <a href="menu.html"
+                   class="btn btn-primary"
+                   style="margin-top:15px">
+                   Browse Menu
+                </a>
+            </div>
+        `;
+
+        subtotalElement.textContent = "₹0";
+        totalElement.textContent = "₹39";
+
+        updateCartCount();
+
+        return;
+    }
+
+    let subtotal = 0;
+
+    cart.forEach(function(item, index) {
+
+        const itemTotal =
+            item.price * item.quantity;
+
+        subtotal += itemTotal;
+
+        cartItems.innerHTML += `
+            <div class="cart-item">
+
+                <div style="
+                    width:90px;
+                    height:75px;
+                    border-radius:12px;
+                    background:#fff0e8;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    font-size:35px;
+                ">
+                    🍽️
+                </div>
+
+                <div>
+                    <h3>${item.name}</h3>
+
+                    <p class="small">
+                        ₹${item.price} each
+                    </p>
+
+                    <div class="qty">
+
+                        <button
+                            onclick="changeQuantity(${index}, -1)">
+                            −
+                        </button>
+
+                        <strong>
+                            ${item.quantity}
+                        </strong>
+
+                        <button
+                            onclick="changeQuantity(${index}, 1)">
+                            +
+                        </button>
+
+                        <button
+                            onclick="removeFromCart(${index})"
+                            style="
+                                margin-left:10px;
+                                width:auto;
+                                padding:5px 10px;
+                            ">
+                            🗑️
+                        </button>
+
+                    </div>
+                </div>
+
+                <strong class="line-total">
+                    ₹${itemTotal}
+                </strong>
+
+            </div>
+        `;
+    });
+
+    const delivery = 39;
+    const total = subtotal + delivery;
+
+    subtotalElement.textContent =
+        "₹" + subtotal;
+
+    totalElement.textContent =
+        "₹" + total;
+
+    updateCartCount();
+}
+
+
+// ===============================
+// CHANGE QUANTITY
+// ===============================
+
+function changeQuantity(index, change) {
+
+    let cart =
+        JSON.parse(localStorage.getItem("freshbiteCart")) || [];
+
+    cart[index].quantity += change;
+
+    if (cart[index].quantity <= 0) {
+        cart.splice(index, 1);
+    }
+
+    localStorage.setItem(
+        "freshbiteCart",
+        JSON.stringify(cart)
+    );
+
+    displayCart();
+}
+
+
+// ===============================
+// REMOVE ITEM
+// ===============================
+
+function removeFromCart(index) {
+
+    let cart =
+        JSON.parse(localStorage.getItem("freshbiteCart")) || [];
+
+    cart.splice(index, 1);
+
+    localStorage.setItem(
+        "freshbiteCart",
+        JSON.stringify(cart)
+    );
+
+    displayCart();
+}
+
+
+// ===============================
+// LOAD CART
+// ===============================
+
+displayCart();
 
 
 // ===============================
