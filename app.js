@@ -1,7 +1,6 @@
 // ===============================
 // MOBILE MENU
 // ===============================
-
 const menuBtn = document.querySelector(".menu-btn");
 const navLinks = document.querySelector(".navlinks");
 
@@ -15,7 +14,6 @@ if (menuBtn && navLinks) {
 // ===============================
 // CURRENT YEAR
 // ===============================
-
 const year = document.getElementById("year");
 
 if (year) {
@@ -24,71 +22,71 @@ if (year) {
 
 
 // ===============================
-// MENU DATA
+// FOOD DATA
 // ===============================
-
 const foods = [
     {
-        id: "pizza",
-        name: "FreshBite Veg Pizza",
+        name: "Margherita Pizza",
         category: "Pizza",
-        diet: "Veg",
+        type: "Veg",
         price: 199,
-        rating: 4.5,
-        image: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=800&q=80"
+        description: "Classic cheese and tomato pizza"
     },
     {
-        id: "paneer-pizza",
+        name: "Farmhouse Pizza",
+        category: "Pizza",
+        type: "Veg",
+        price: 249,
+        description: "Loaded with fresh vegetables"
+    },
+    {
         name: "Paneer Tikka Pizza",
         category: "Pizza",
-        diet: "Veg",
-        price: 249,
-        rating: 4.6,
-        image: "https://images.unsplash.com/photo-1566843972142-a7fcb70de55a?auto=format&fit=crop&w=800&q=80"
+        type: "Veg",
+        price: 279,
+        description: "Pizza topped with spicy paneer tikka"
     },
     {
-        id: "momos",
         name: "Veg Momos",
         category: "Momos",
-        diet: "Veg",
+        type: "Veg",
         price: 120,
-        rating: 4.4,
-        image: "https://images.unsplash.com/photo-1625220194771-7ebdea0b70b9?auto=format&fit=crop&w=800&q=80"
+        description: "Steamed vegetable momos"
     },
     {
-        id: "chicken-momos",
         name: "Chicken Momos",
         category: "Momos",
-        diet: "Non-Veg",
+        type: "Non-Veg",
         price: 160,
-        rating: 4.5,
-        image: "https://images.unsplash.com/photo-1626776876729-bab436e7b9c8?auto=format&fit=crop&w=800&q=80"
+        description: "Juicy chicken momos"
     },
     {
-        id: "thali",
-        name: "Himachali Veg Thali",
+        name: "Veg Thali",
         category: "Thali",
-        diet: "Veg",
+        type: "Veg",
+        price: 180,
+        description: "Complete traditional Indian meal"
+    },
+    {
+        name: "Paneer Butter Masala",
+        category: "Indian",
+        type: "Veg",
         price: 220,
-        rating: 4.7,
-        image: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=800&q=80"
+        description: "Creamy paneer curry"
     },
     {
-        id: "chicken-thali",
-        name: "Chicken Thali",
-        category: "Thali",
-        diet: "Non-Veg",
-        price: 280,
-        rating: 4.6,
-        image: "https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=800&q=80"
+        name: "Chicken Biryani",
+        category: "Biryani",
+        type: "Non-Veg",
+        price: 250,
+        description: "Aromatic chicken biryani"
     }
 ];
 
 
 // ===============================
-// DISPLAY FOOD ITEMS
+// DISPLAY FOOD
 // ===============================
-
 const foodGrid = document.getElementById("foodGrid");
 const foodSearch = document.getElementById("foodSearch");
 const dietFilter = document.getElementById("dietFilter");
@@ -113,18 +111,20 @@ function displayFoods() {
 
         const matchesDiet =
             selectedDiet === "All" ||
-            food.diet === selectedDiet;
+            food.type === selectedDiet;
 
         return matchesSearch && matchesDiet;
     });
 
 
-    // No result message
+    foodGrid.innerHTML = "";
+
+
     if (filteredFoods.length === 0) {
 
         foodGrid.innerHTML = `
-            <div class="empty" style="grid-column:1/-1">
-                <h3>No food found 😔</h3>
+            <div class="empty">
+                <h3>No food found</h3>
                 <p>Try searching for pizza, momos or thali.</p>
             </div>
         `;
@@ -133,63 +133,60 @@ function displayFoods() {
     }
 
 
-    // Display food cards
-    foodGrid.innerHTML = filteredFoods.map(function (food) {
+    filteredFoods.forEach(function (food) {
 
-        return `
-            <article class="card">
+        const card = document.createElement("div");
 
-                <img
-                    src="${food.image}"
-                    alt="${food.name}"
-                >
+        card.className = "card";
 
-                <div class="card-body">
+        card.innerHTML = `
+            <div style="
+                height:180px;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                background:#fff0e8;
+                font-size:80px;
+            ">
+                ${food.category === "Pizza" ? "🍕" :
+                  food.category === "Momos" ? "🥟" :
+                  food.category === "Thali" ? "🍛" :
+                  food.category === "Biryani" ? "🍚" : "🍽️"}
+            </div>
 
-                    <span class="badge ${food.diet === "Veg" ? "green" : ""}">
-                        ${food.diet}
-                    </span>
+            <div class="card-body">
 
-                    <h3>${food.name}</h3>
+                <span class="badge ${food.type === "Veg" ? "green" : ""}">
+                    ${food.type}
+                </span>
 
-                    <div class="meta">
-                        <span>⭐ ${food.rating}</span>
-                        <span>${food.category}</span>
-                    </div>
+                <h3>${food.name}</h3>
 
-                    <div style="
-                        display:flex;
-                        justify-content:space-between;
-                        align-items:center;
-                        margin-top:14px;
-                    ">
+                <p class="small">
+                    ${food.description}
+                </p>
 
-                        <span class="price">
-                            ₹${food.price}
-                        </span>
+                <div class="meta" style="margin-top:12px">
+                    <span class="price">₹${food.price}</span>
 
-                        <button
-                            class="btn btn-primary"
-                            onclick="addToCart('${food.id}')"
-                        >
-                            Add to Cart
-                        </button>
-
-                    </div>
-
+                    <button
+                        class="btn btn-primary"
+                        onclick="addToCart('${food.name}', ${food.price})">
+                        Add to Cart
+                    </button>
                 </div>
 
-            </article>
+            </div>
         `;
 
-    }).join("");
+        foodGrid.appendChild(card);
+    });
 }
 
 
 // ===============================
 // SEARCH
 // ===============================
-
 if (foodSearch) {
     foodSearch.addEventListener("input", displayFoods);
 }
@@ -198,38 +195,28 @@ if (foodSearch) {
 // ===============================
 // DIET FILTER
 // ===============================
-
 if (dietFilter) {
     dietFilter.addEventListener("change", displayFoods);
 }
 
 
 // ===============================
-// CART
+// ADD TO CART
 // ===============================
-
-function addToCart(foodId) {
-
-    const food = foods.find(function (item) {
-        return item.id === foodId;
-    });
-
-    if (!food) return;
+function addToCart(name, price) {
 
     let cart = JSON.parse(localStorage.getItem("freshbiteCart")) || [];
 
     const existingItem = cart.find(function (item) {
-        return item.id === foodId;
+        return item.name === name;
     });
 
     if (existingItem) {
         existingItem.quantity += 1;
     } else {
         cart.push({
-            id: food.id,
-            name: food.name,
-            price: food.price,
-            image: food.image,
+            name: name,
+            price: price,
             quantity: 1
         });
     }
@@ -238,50 +225,29 @@ function addToCart(foodId) {
 
     updateCartCount();
 
-    showToast(food.name + " added to cart!");
+    alert(name + " added to cart!");
 }
 
 
 // ===============================
 // CART COUNT
 // ===============================
-
 function updateCartCount() {
 
     const cart = JSON.parse(localStorage.getItem("freshbiteCart")) || [];
 
-    const totalItems = cart.reduce(function (total, item) {
+    const totalQuantity = cart.reduce(function (total, item) {
         return total + item.quantity;
     }, 0);
 
     document.querySelectorAll(".cart-count").forEach(function (element) {
-        element.textContent = totalItems;
+        element.textContent = totalQuantity;
     });
 }
 
 
 // ===============================
-// TOAST MESSAGE
+// START MENU
 // ===============================
-
-function showToast(message) {
-
-    const toast = document.getElementById("toast");
-
-    if (!toast) return;
-
-    toast.textContent = message;
-    toast.classList.add("show");
-
-    setTimeout(function () {
-        toast.classList.remove("show");
-    }, 2000);
-}
-
-
-// ===============================
-// INITIAL LOAD
-// ===============================
-
 displayFoods();
 updateCartCount();
