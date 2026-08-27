@@ -462,9 +462,6 @@ displayFoods();
 displayCart();
 updateCartCount();
 // ===============================
-// CHECKOUT PAGE
-// ===============================
-
 const checkoutTotal = document.getElementById("checkoutTotal");
 const checkoutForm = document.getElementById("checkoutForm");
 const checkoutResult = document.getElementById("checkoutResult");
