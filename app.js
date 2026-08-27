@@ -528,13 +528,7 @@ if (checkoutForm) {
             "FB" + Math.floor(100000 + Math.random() * 900000);
 
         // Save order information
-        localStorage.setItem(
-            "freshbiteLastOrder",
-            JSON.stringify({
-                orderId: orderId,
-                total: totals.total
-            })
-        );
+        
 
         // Clear cart
         localStorage.removeItem("freshbiteCart");
@@ -571,3 +565,140 @@ if (orderIdElement && orderTotalElement) {
             "₹0";
     }
 }
+
+// ===============================
+// ORDER HISTORY
+// ===============================
+
+const ordersList =
+    document.getElementById("ordersList");
+
+function displayOrders() {
+
+    if (!ordersList) return;
+
+    const orders =
+        JSON.parse(localStorage.getItem("freshbiteOrders")) || [];
+
+    // No orders
+    if (orders.length === 0) {
+
+        ordersList.innerHTML = `
+            <div class="card">
+                <div class="empty">
+
+                    <h3>No orders yet 🛒</h3>
+
+                    <p>
+                        Your previous orders will appear here.
+                    </p>
+
+                    <a href="menu.html"
+                       class="btn btn-primary"
+                       style="margin-top:15px;">
+                        Browse Menu
+                    </a>
+
+                </div>
+            </div>
+        `;
+
+        return;
+    }
+
+
+    ordersList.innerHTML = "";
+
+
+    orders.forEach(function(order) {
+
+        let itemsHTML = "";
+
+        order.items.forEach(function(item) {
+
+            itemsHTML += `
+                <p>
+                    ${item.name}
+                    × ${item.quantity}
+                    — ₹${item.price * item.quantity}
+                </p>
+            `;
+
+        });
+
+
+        ordersList.innerHTML += `
+
+            <div class="card"
+                 style="
+                    padding:22px;
+                    margin-bottom:20px;
+                 ">
+
+                <div style="
+                    display:flex;
+                    justify-content:space-between;
+                    gap:15px;
+                    flex-wrap:wrap;
+                ">
+
+                    <div>
+
+                        <span class="badge green">
+                            ${order.status}
+                        </span>
+
+                        <h2 style="
+                            margin-top:8px;
+                            font-size:1.4rem;
+                        ">
+                            Order #${order.orderId}
+                        </h2>
+
+                        <p class="small">
+                            ${order.date}
+                        </p>
+
+                    </div>
+
+
+                    <div style="
+                        text-align:right;
+                    ">
+
+                        <p class="small">
+                            Order Total
+                        </p>
+
+                        <strong style="
+                            font-size:1.3rem;
+                        ">
+                            ₹${order.total}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div style="
+                    border-top:1px solid var(--border);
+                    margin-top:15px;
+                    padding-top:15px;
+                ">
+
+                    <h3>
+                        Items
+                    </h3>
+
+                    ${itemsHTML}
+
+                </div>
+
+            </div>
+
+        `;
+    });
+}
+
+displayOrders();
