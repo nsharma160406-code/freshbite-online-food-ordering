@@ -461,3 +461,73 @@ function removeFromCart(index) {
 displayFoods();
 displayCart();
 updateCartCount();
+// ===============================
+// CHECKOUT PAGE
+// ===============================
+
+const checkoutTotal = document.getElementById("checkoutTotal");
+const checkoutForm = document.getElementById("checkoutForm");
+const checkoutResult = document.getElementById("checkoutResult");
+
+function displayCheckoutTotal() {
+
+    if (!checkoutTotal) return;
+
+    const cart =
+        JSON.parse(localStorage.getItem("freshbiteCart")) || [];
+
+    let subtotal = 0;
+
+    cart.forEach(function(item) {
+        subtotal += item.price * item.quantity;
+    });
+
+    const delivery = cart.length > 0 ? 39 : 0;
+    const total = subtotal + delivery;
+
+    checkoutTotal.textContent = "₹" + total;
+}
+
+displayCheckoutTotal();
+
+
+// ===============================
+// PLACE ORDER
+// ===============================
+
+if (checkoutForm) {
+
+    checkoutForm.addEventListener("submit", function(event) {
+
+        event.preventDefault();
+
+        const cart =
+            JSON.parse(localStorage.getItem("freshbiteCart")) || [];
+
+        if (cart.length === 0) {
+            checkoutResult.innerHTML = `
+                <div class="notice">
+                    Your cart is empty. Please add food before placing an order.
+                </div>
+            `;
+            return;
+        }
+
+        checkoutResult.innerHTML = `
+            <div class="notice">
+                <h3>🎉 Order placed successfully!</h3>
+                <p>Your FreshBite order has been placed successfully.</p>
+                <p>Delivery will arrive in approximately 30–40 minutes.</p>
+            </div>
+        `;
+
+        // Clear cart after successful order
+        localStorage.removeItem("freshbiteCart");
+
+        updateCartCount();
+
+        checkoutForm.reset();
+
+        checkoutTotal.textContent = "₹0";
+    });
+}
