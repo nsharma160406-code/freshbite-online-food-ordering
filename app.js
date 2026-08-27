@@ -1,4 +1,6 @@
-alert("JavaScript is working!");
+// ===============================
+// MOBILE MENU
+// ===============================
 const menuBtn = document.querySelector(".menu-btn");
 const navLinks = document.querySelector(".navlinks");
 
@@ -83,6 +85,20 @@ const foods = [
 
 
 // ===============================
+// FOOD ICON
+// ===============================
+function getFoodIcon(category) {
+
+    if (category === "Pizza") return "🍕";
+    if (category === "Momos") return "🥟";
+    if (category === "Thali") return "🍛";
+    if (category === "Biryani") return "🍚";
+
+    return "🍽️";
+}
+
+
+// ===============================
 // DISPLAY FOOD
 // ===============================
 const foodGrid = document.getElementById("foodGrid");
@@ -114,9 +130,7 @@ function displayFoods() {
         return matchesSearch && matchesDiet;
     });
 
-
     foodGrid.innerHTML = "";
-
 
     if (filteredFoods.length === 0) {
 
@@ -129,7 +143,6 @@ function displayFoods() {
 
         return;
     }
-
 
     filteredFoods.forEach(function (food) {
 
@@ -146,10 +159,7 @@ function displayFoods() {
                 background:#fff0e8;
                 font-size:80px;
             ">
-                ${food.category === "Pizza" ? "🍕" :
-                  food.category === "Momos" ? "🥟" :
-                  food.category === "Thali" ? "🍛" :
-                  food.category === "Biryani" ? "🍚" : "🍽️"}
+                ${getFoodIcon(food.category)}
             </div>
 
             <div class="card-body">
@@ -165,13 +175,17 @@ function displayFoods() {
                 </p>
 
                 <div class="meta" style="margin-top:12px">
-                    <span class="price">₹${food.price}</span>
+
+                    <span class="price">
+                        ₹${food.price}
+                    </span>
 
                     <button
                         class="btn btn-primary"
                         onclick="addToCart('${food.name}', ${food.price})">
                         Add to Cart
                     </button>
+
                 </div>
 
             </div>
@@ -203,15 +217,19 @@ if (dietFilter) {
 // ===============================
 function addToCart(name, price) {
 
-    let cart = JSON.parse(localStorage.getItem("freshbiteCart")) || [];
+    let cart =
+        JSON.parse(localStorage.getItem("freshbiteCart")) || [];
 
     const existingItem = cart.find(function (item) {
         return item.name === name;
     });
 
     if (existingItem) {
+
         existingItem.quantity += 1;
+
     } else {
+
         cart.push({
             name: name,
             price: price,
@@ -219,7 +237,10 @@ function addToCart(name, price) {
         });
     }
 
-    localStorage.setItem("freshbiteCart", JSON.stringify(cart));
+    localStorage.setItem(
+        "freshbiteCart",
+        JSON.stringify(cart)
+    );
 
     updateCartCount();
 
@@ -232,20 +253,22 @@ function addToCart(name, price) {
 // ===============================
 function updateCartCount() {
 
-    const cart = JSON.parse(localStorage.getItem("freshbiteCart")) || [];
+    const cart =
+        JSON.parse(localStorage.getItem("freshbiteCart")) || [];
 
     const totalQuantity = cart.reduce(function (total, item) {
-        return total + item.quantity;
+        return total + Number(item.quantity);
     }, 0);
 
     document.querySelectorAll(".cart-count").forEach(function (element) {
         element.textContent = totalQuantity;
     });
 }
-// ===============================
-// CART PAGE
-// ===============================
 
+
+// ===============================
+// DISPLAY CART
+// ===============================
 const cartItems = document.getElementById("cartItems");
 const subtotalElement = document.getElementById("subtotal");
 const totalElement = document.getElementById("total");
@@ -254,40 +277,56 @@ function displayCart() {
 
     if (!cartItems) return;
 
-    let cart =
+    const cart =
         JSON.parse(localStorage.getItem("freshbiteCart")) || [];
 
     cartItems.innerHTML = "";
 
-    // Empty cart
+    // EMPTY CART
     if (cart.length === 0) {
 
         cartItems.innerHTML = `
             <div class="empty">
+
                 <h3>Your cart is empty 🛒</h3>
-                <p>Add some delicious food from the menu.</p>
-                <a href="menu.html"
-                   class="btn btn-primary"
-                   style="margin-top:15px">
-                   Browse Menu
+
+                <p>
+                    Add some delicious food from the menu.
+                </p>
+
+                <a
+                    href="menu.html"
+                    class="btn btn-primary"
+                    style="margin-top:15px">
+                    Browse Menu
                 </a>
+
             </div>
         `;
 
-        subtotalElement.textContent = "₹0";
-        totalElement.textContent = "₹39";
+        if (subtotalElement) {
+            subtotalElement.textContent = "₹0";
+        }
+
+        if (totalElement) {
+            totalElement.textContent = "₹39";
+        }
 
         updateCartCount();
 
         return;
     }
 
+
+    // CART HAS ITEMS
     let subtotal = 0;
 
-    cart.forEach(function(item, index) {
+    cart.forEach(function (item, index) {
 
-        const itemTotal =
-            item.price * item.quantity;
+        const quantity = Number(item.quantity);
+        const price = Number(item.price);
+
+        const itemTotal = price * quantity;
 
         subtotal += itemTotal;
 
@@ -308,10 +347,13 @@ function displayCart() {
                 </div>
 
                 <div>
-                    <h3>${item.name}</h3>
+
+                    <h3>
+                        ${item.name}
+                    </h3>
 
                     <p class="small">
-                        ₹${item.price} each
+                        ₹${price} each
                     </p>
 
                     <div class="qty">
@@ -322,7 +364,7 @@ function displayCart() {
                         </button>
 
                         <strong>
-                            ${item.quantity}
+                            ${quantity}
                         </strong>
 
                         <button
@@ -341,6 +383,7 @@ function displayCart() {
                         </button>
 
                     </div>
+
                 </div>
 
                 <strong class="line-total">
@@ -351,14 +394,17 @@ function displayCart() {
         `;
     });
 
+
     const delivery = 39;
     const total = subtotal + delivery;
 
-    subtotalElement.textContent =
-        "₹" + subtotal;
+    if (subtotalElement) {
+        subtotalElement.textContent = "₹" + subtotal;
+    }
 
-    totalElement.textContent =
-        "₹" + total;
+    if (totalElement) {
+        totalElement.textContent = "₹" + total;
+    }
 
     updateCartCount();
 }
@@ -367,13 +413,15 @@ function displayCart() {
 // ===============================
 // CHANGE QUANTITY
 // ===============================
-
 function changeQuantity(index, change) {
 
     let cart =
         JSON.parse(localStorage.getItem("freshbiteCart")) || [];
 
-    cart[index].quantity += change;
+    if (!cart[index]) return;
+
+    cart[index].quantity =
+        Number(cart[index].quantity) + change;
 
     if (cart[index].quantity <= 0) {
         cart.splice(index, 1);
@@ -389,9 +437,8 @@ function changeQuantity(index, change) {
 
 
 // ===============================
-// REMOVE ITEM
+// REMOVE FROM CART
 // ===============================
-
 function removeFromCart(index) {
 
     let cart =
@@ -409,16 +456,8 @@ function removeFromCart(index) {
 
 
 // ===============================
-// LOAD CART
+// START APP
 // ===============================
-
+displayFoods();
 displayCart();
-
-
-// ===============================
-// START MENU
-// ===============================
-displayFoods();
-updateCartCount();
-displayFoods();
 updateCartCount();
