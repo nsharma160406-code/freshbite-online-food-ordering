@@ -490,6 +490,9 @@ displayCheckoutTotal();
 
 // ===============================
 // PLACE ORDER
+// =============================
+// ===============================
+// PLACE SIMULATED ORDER
 // ===============================
 
 if (checkoutForm) {
@@ -498,33 +501,73 @@ if (checkoutForm) {
 
         event.preventDefault();
 
-        const cart =
-            JSON.parse(localStorage.getItem("freshbiteCart")) || [];
+        const cart = getCart();
 
         if (cart.length === 0) {
+
             checkoutResult.innerHTML = `
                 <div class="notice">
-                    Your cart is empty. Please add food before placing an order.
+                    <h3>🛒 Your cart is empty</h3>
+                    <p>Please add food before placing your order.</p>
+                    <a href="menu.html"
+                       class="btn btn-primary"
+                       style="margin-top:10px;">
+                       Go to Menu
+                    </a>
                 </div>
             `;
+
             return;
         }
 
-        checkoutResult.innerHTML = `
-            <div class="notice">
-                <h3>🎉 Order placed successfully!</h3>
-                <p>Your FreshBite order has been placed successfully.</p>
-                <p>Delivery will arrive in approximately 30–40 minutes.</p>
-            </div>
-        `;
+        // Calculate final amount
+        const totals = calculateCartTotal();
 
-        // Clear cart after successful order
+        // Create order ID
+        const orderId =
+            "FB" + Math.floor(100000 + Math.random() * 900000);
+
+        // Save order information
+        localStorage.setItem(
+            "freshbiteLastOrder",
+            JSON.stringify({
+                orderId: orderId,
+                total: totals.total
+            })
+        );
+
+        // Clear cart
         localStorage.removeItem("freshbiteCart");
 
-        updateCartCount();
-
-        checkoutForm.reset();
-
-        checkoutTotal.textContent = "₹0";
+        // Go to confirmation page
+        window.location.href = "order-success.html";
     });
+}// ===============================
+// ORDER SUCCESS PAGE
+// ===============================
+
+const orderIdElement = document.getElementById("orderId");
+const orderTotalElement = document.getElementById("orderTotal");
+
+if (orderIdElement && orderTotalElement) {
+
+    const lastOrder =
+        JSON.parse(localStorage.getItem("freshbiteLastOrder"));
+
+    if (lastOrder) {
+
+        orderIdElement.textContent =
+            lastOrder.orderId;
+
+        orderTotalElement.textContent =
+            "₹" + lastOrder.total;
+
+    } else {
+
+        orderIdElement.textContent =
+            "Not available";
+
+        orderTotalElement.textContent =
+            "₹0";
+    }
 }
