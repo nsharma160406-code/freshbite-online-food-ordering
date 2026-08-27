@@ -490,11 +490,42 @@ displayCheckoutTotal();
 
 // ===============================
 // PLACE ORDER
-// =============================
 // ===============================
 // PLACE SIMULATED ORDER
 // ===============================
 
+const checkoutForm = document.getElementById("checkoutForm");
+const checkoutResult = document.getElementById("checkoutResult");
+const checkoutTotal = document.getElementById("checkoutTotal");
+
+function getCart() {
+    return JSON.parse(localStorage.getItem("freshbiteCart")) || [];
+}
+
+
+// Show cart total on checkout page
+function showCheckoutTotal() {
+
+    if (!checkoutTotal) return;
+
+    const cart = getCart();
+
+    let subtotal = 0;
+
+    cart.forEach(function(item) {
+        subtotal += item.price * item.quantity;
+    });
+
+    const delivery = cart.length > 0 ? 39 : 0;
+    const total = subtotal + delivery;
+
+    checkoutTotal.textContent = "₹" + total;
+}
+
+showCheckoutTotal();
+
+
+// Place order
 if (checkoutForm) {
 
     checkoutForm.addEventListener("submit", function(event) {
@@ -503,6 +534,7 @@ if (checkoutForm) {
 
         const cart = getCart();
 
+        // Check cart
         if (cart.length === 0) {
 
             checkoutResult.innerHTML = `
@@ -520,52 +552,90 @@ if (checkoutForm) {
             return;
         }
 
-        // Calculate final amount
-        const totals = calculateCartTotal();
+
+        // Calculate amount
+        let subtotal = 0;
+
+        cart.forEach(function(item) {
+            subtotal += item.price * item.quantity;
+        });
+
+        const delivery = 39;
+        const total = subtotal + delivery;
+
 
         // Create order ID
         const orderId =
             "FB" + Math.floor(100000 + Math.random() * 900000);
 
-        // Save order information
-        
+
+        // Save order
+        const order = {
+            orderId: orderId,
+            items: cart,
+            subtotal: subtotal,
+            delivery: delivery,
+            total: total,
+            date: new Date().toLocaleString()
+        };
+
+        localStorage.setItem(
+            "freshbiteLatestOrder",
+            JSON.stringify(order)
+        );
+
 
         // Clear cart
         localStorage.removeItem("freshbiteCart");
 
-        // Go to confirmation page
-        window.location.href = "order-success.html";
+        updateCartCount();
+
+
+        // Show confirmation
+        checkoutResult.innerHTML = `
+            <div class="notice" style="margin-top:20px;">
+                <h2>🎉 Order Confirmed!</h2>
+
+                <p>
+                    Your simulated order has been placed successfully.
+                </p>
+
+                <p>
+                    <strong>Order ID:</strong> ${orderId}
+                </p>
+
+                <p>
+                    <strong>Order Total:</strong> ₹${total}
+                </p>
+
+                <p>
+                    <strong>Delivery:</strong> 30–40 minutes
+                </p>
+
+                <a href="menu.html"
+                   class="btn btn-primary"
+                   style="margin-top:15px;">
+                   Order More Food
+                </a>
+
+                <a href="index.html"
+                   class="btn btn-secondary"
+                   style="margin-top:10px;">
+                   Back to Home
+                </a>
+            </div>
+        `;
+
+
+        // Update checkout amount
+        checkoutTotal.textContent = "₹0";
+
+
+        // Prevent submitting again
+        checkoutForm.reset();
+
     });
-}// ===============================
-// ORDER SUCCESS PAGE
-// ===============================
-
-const orderIdElement = document.getElementById("orderId");
-const orderTotalElement = document.getElementById("orderTotal");
-
-if (orderIdElement && orderTotalElement) {
-
-    const lastOrder =
-        JSON.parse(localStorage.getItem("freshbiteLastOrder"));
-
-    if (lastOrder) {
-
-        orderIdElement.textContent =
-            lastOrder.orderId;
-
-        orderTotalElement.textContent =
-            "₹" + lastOrder.total;
-
-    } else {
-
-        orderIdElement.textContent =
-            "Not available";
-
-        orderTotalElement.textContent =
-            "₹0";
-    }
 }
-
 // ===============================
 // ORDER HISTORY
 // ===============================
