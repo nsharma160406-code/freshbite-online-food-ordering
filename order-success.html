@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+    <meta name="description"
+          content="FreshBite order confirmation">
+
+    <title>Order Confirmed | FreshBite</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <div class="container nav">
+
+        <a class="logo" href="index.html">
+            🍴 Fresh<span>Bite</span>
+        </a>
+
+        <button class="menu-btn" aria-label="Menu">
+            ☰
+        </button>
+
+        <nav class="navlinks">
+
+            <a href="index.html">Home</a>
+
+            <a href="restaurants.html">
+                Restaurants
+            </a>
+
+            <a href="menu.html">
+                Menu
+            </a>
+
+            <a href="about.html">
+                About
+            </a>
+
+            <a href="contact.html">
+                Contact
+            </a>
+
+            <a href="auth.html">
+                Login
+            </a>
+
+            <a class="cart-pill" href="cart.html">
+                Cart (<span class="cart-count">0</span>)
+            </a>
+
+        </nav>
+
+    </div>
+</header>
+
+
+<main>
+
+<section class="section">
+
+    <div class="container">
+
+        <div class="card"
+             style="
+                max-width:700px;
+                margin:auto;
+                padding:40px 25px;
+                text-align:center;
+             ">
+
+            <div style="
+                font-size:70px;
+                margin-bottom:15px;
+            ">
+                🎉
+            </div>
+
+            <div class="eyebrow">
+                FreshBite
+            </div>
+
+            <h1 style="
+                font-size:3rem;
+                margin:10px 0;
+            ">
+                Order Confirmed!
+            </h1>
+
+            <p class="lead"
+               style="margin:auto;">
+                Thank you for ordering from FreshBite.
+                Your food is being prepared.
+            </p>
+
+
+            <div class="notice"
+                 style="
+                    margin-top:25px;
+                    text-align:left;
+                 ">
+
+                <p>
+                    <strong>Order ID:</strong>
+                    <span id="orderId">
+                        Loading...
+                    </span>
+                </p>
+
+                <p>
+                    <strong>Order Total:</strong>
+                    <span id="orderTotal">
+                        ₹0
+                    </span>
+                </p>
+
+                <p>
+                    <strong>Estimated Delivery:</strong>
+                    30–40 minutes
+                </p>
+
+            </div>
+
+
+            <div style="
+                display:flex;
+                gap:12px;
+                justify-content:center;
+                flex-wrap:wrap;
+                margin-top:25px;
+            ">
+
+                <a href="menu.html"
+                   class="btn btn-primary">
+                    Continue Shopping
+                </a>
+
+                <a href="index.html"
+                   class="btn btn-secondary">
+                    Back to Home
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<footer>
+
+    <div class="container footer-grid">
+
+        <div>
+            <h3>🍴 FreshBite</h3>
+
+            <p>
+                Fresh food, simple ordering and a
+                smooth delivery-style experience
+                for Hamirpur.
+            </p>
+        </div>
+
+        <div>
+
+            <h3>Explore</h3>
+
+            <p>
+                <a href="restaurants.html">
+                    Restaurants
+                </a>
+            </p>
+
+            <p>
+                <a href="menu.html">
+                    Menu
+                </a>
+            </p>
+
+            <p>
+                <a href="cart.html">
+                    Cart
+                </a>
+            </p>
+
+        </div>
+
+        <div>
+
+            <h3>Support</h3>
+
+            <p>
+                <a href="about.html">
+                    About Us
+                </a>
+            </p>
+
+            <p>
+                <a href="contact.html">
+                    Contact Us
+                </a>
+            </p>
+
+            <p>
+                <a href="auth.html">
+                    Login/Register
+                </a>
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="container"
+         style="
+            margin-top:25px;
+            border-top:1px solid #333;
+            padding-top:15px;
+         ">
+
+        <p>
+            © <span id="year"></span>
+            FreshBite — Internship Project.
+            Demo ordering only.
+        </p>
+
+    </div>
+
+</footer>
+
+
+<script src="app.js"></script>
+
+</body>
+              </html>
