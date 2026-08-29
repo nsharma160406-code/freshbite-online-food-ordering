@@ -139,8 +139,9 @@ const restaurants = [
         location: "Hamirpur"
     }
 ];
-
-
+const foods =[
+    // you'r existimg food data...
+    ];
 // ======================================================
 // DISPLAY RESTAURANTS
 // ======================================================
