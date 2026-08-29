@@ -1,6 +1,12 @@
-// ===============================
+// ======================================================
+// FRESHBITE - COMPLETE APP.JS
+// ======================================================
+
+
+// ======================================================
 // MOBILE MENU
-// ===============================
+// ======================================================
+
 const menuBtn = document.querySelector(".menu-btn");
 const navLinks = document.querySelector(".navlinks");
 
@@ -11,9 +17,10 @@ if (menuBtn && navLinks) {
 }
 
 
-// ===============================
+// ======================================================
 // CURRENT YEAR
-// ===============================
+// ======================================================
+
 const year = document.getElementById("year");
 
 if (year) {
@@ -21,9 +28,10 @@ if (year) {
 }
 
 
-// ===============================
+// ======================================================
 // FOOD DATA
-// ===============================
+// ======================================================
+
 const foods = [
     {
         name: "Margherita Pizza",
@@ -84,9 +92,28 @@ const foods = [
 ];
 
 
-// ===============================
+// ======================================================
+// GET CART
+// ======================================================
+
+function getCart() {
+    return JSON.parse(localStorage.getItem("freshbiteCart")) || [];
+}
+
+
+// ======================================================
+// SAVE CART
+// ======================================================
+
+function saveCart(cart) {
+    localStorage.setItem("freshbiteCart", JSON.stringify(cart));
+}
+
+
+// ======================================================
 // FOOD ICON
-// ===============================
+// ======================================================
+
 function getFoodIcon(category) {
 
     if (category === "Pizza") return "🍕";
@@ -98,9 +125,10 @@ function getFoodIcon(category) {
 }
 
 
-// ===============================
-// DISPLAY FOOD
-// ===============================
+// ======================================================
+// DISPLAY FOODS
+// ======================================================
+
 const foodGrid = document.getElementById("foodGrid");
 const foodSearch = document.getElementById("foodSearch");
 const dietFilter = document.getElementById("dietFilter");
@@ -196,38 +224,38 @@ function displayFoods() {
 }
 
 
-// ===============================
+// ======================================================
 // SEARCH
-// ===============================
+// ======================================================
+
 if (foodSearch) {
     foodSearch.addEventListener("input", displayFoods);
 }
 
 
-// ===============================
+// ======================================================
 // DIET FILTER
-// ===============================
+// ======================================================
+
 if (dietFilter) {
     dietFilter.addEventListener("change", displayFoods);
 }
 
 
-// ===============================
+// ======================================================
 // ADD TO CART
-// ===============================
+// ======================================================
+
 function addToCart(name, price) {
 
-    let cart =
-        JSON.parse(localStorage.getItem("freshbiteCart")) || [];
+    const cart = getCart();
 
     const existingItem = cart.find(function (item) {
         return item.name === name;
     });
 
     if (existingItem) {
-
         existingItem.quantity += 1;
-
     } else {
 
         cart.push({
@@ -237,10 +265,7 @@ function addToCart(name, price) {
         });
     }
 
-    localStorage.setItem(
-        "freshbiteCart",
-        JSON.stringify(cart)
-    );
+    saveCart(cart);
 
     updateCartCount();
 
@@ -248,16 +273,16 @@ function addToCart(name, price) {
 }
 
 
-// ===============================
+// ======================================================
 // CART COUNT
-// ===============================
+// ======================================================
+
 function updateCartCount() {
 
-    const cart =
-        JSON.parse(localStorage.getItem("freshbiteCart")) || [];
+    const cart = getCart();
 
     const totalQuantity = cart.reduce(function (total, item) {
-        return total + Number(item.quantity);
+        return total + item.quantity;
     }, 0);
 
     document.querySelectorAll(".cart-count").forEach(function (element) {
@@ -266,9 +291,34 @@ function updateCartCount() {
 }
 
 
-// ===============================
-// DISPLAY CART
-// ===============================
+// ======================================================
+// CALCULATE CART TOTAL
+// ======================================================
+
+function calculateCartTotal() {
+
+    const cart = getCart();
+
+    let subtotal = 0;
+
+    cart.forEach(function (item) {
+        subtotal += item.price * item.quantity;
+    });
+
+    const delivery = cart.length > 0 ? 39 : 0;
+
+    return {
+        subtotal: subtotal,
+        delivery: delivery,
+        total: subtotal + delivery
+    };
+}
+
+
+// ======================================================
+// CART PAGE
+// ======================================================
+
 const cartItems = document.getElementById("cartItems");
 const subtotalElement = document.getElementById("subtotal");
 const totalElement = document.getElementById("total");
@@ -277,12 +327,10 @@ function displayCart() {
 
     if (!cartItems) return;
 
-    const cart =
-        JSON.parse(localStorage.getItem("freshbiteCart")) || [];
+    const cart = getCart();
 
     cartItems.innerHTML = "";
 
-    // EMPTY CART
     if (cart.length === 0) {
 
         cartItems.innerHTML = `
@@ -309,7 +357,7 @@ function displayCart() {
         }
 
         if (totalElement) {
-            totalElement.textContent = "₹39";
+            totalElement.textContent = "₹0";
         }
 
         updateCartCount();
@@ -318,19 +366,13 @@ function displayCart() {
     }
 
 
-    // CART HAS ITEMS
-    let subtotal = 0;
-
     cart.forEach(function (item, index) {
 
-        const quantity = Number(item.quantity);
-        const price = Number(item.price);
-
-        const itemTotal = price * quantity;
-
-        subtotal += itemTotal;
+        const itemTotal =
+            item.price * item.quantity;
 
         cartItems.innerHTML += `
+
             <div class="cart-item">
 
                 <div style="
@@ -348,12 +390,10 @@ function displayCart() {
 
                 <div>
 
-                    <h3>
-                        ${item.name}
-                    </h3>
+                    <h3>${item.name}</h3>
 
                     <p class="small">
-                        ₹${price} each
+                        ₹${item.price} each
                     </p>
 
                     <div class="qty">
@@ -364,7 +404,7 @@ function displayCart() {
                         </button>
 
                         <strong>
-                            ${quantity}
+                            ${item.quantity}
                         </strong>
 
                         <button
@@ -395,224 +435,205 @@ function displayCart() {
     });
 
 
-    const delivery = 39;
-    const total = subtotal + delivery;
+    const totals = calculateCartTotal();
 
     if (subtotalElement) {
-        subtotalElement.textContent = "₹" + subtotal;
+        subtotalElement.textContent =
+            "₹" + totals.subtotal;
     }
 
     if (totalElement) {
-        totalElement.textContent = "₹" + total;
+        totalElement.textContent =
+            "₹" + totals.total;
     }
 
     updateCartCount();
 }
 
 
-// ===============================
+// ======================================================
 // CHANGE QUANTITY
-// ===============================
+// ======================================================
+
 function changeQuantity(index, change) {
 
-    let cart =
-        JSON.parse(localStorage.getItem("freshbiteCart")) || [];
+    const cart = getCart();
 
     if (!cart[index]) return;
 
-    cart[index].quantity =
-        Number(cart[index].quantity) + change;
+    cart[index].quantity += change;
 
     if (cart[index].quantity <= 0) {
         cart.splice(index, 1);
     }
 
-    localStorage.setItem(
-        "freshbiteCart",
-        JSON.stringify(cart)
-    );
+    saveCart(cart);
 
     displayCart();
+
+    updateCartCount();
 }
 
 
-// ===============================
+// ======================================================
 // REMOVE FROM CART
-// ===============================
+// ======================================================
+
 function removeFromCart(index) {
 
-    let cart =
-        JSON.parse(localStorage.getItem("freshbiteCart")) || [];
+    const cart = getCart();
+
+    if (!cart[index]) return;
 
     cart.splice(index, 1);
 
-    localStorage.setItem(
-        "freshbiteCart",
-        JSON.stringify(cart)
-    );
+    saveCart(cart);
 
     displayCart();
+
+    updateCartCount();
 }
 
 
-// ===============================
-// START APP
-// ===============================
-displayFoods();
-displayCart();
-updateCartCount();
-// ===============================
-const checkoutTotal = document.getElementById("checkoutTotal");
-const checkoutForm = document.getElementById("checkoutForm");
-const checkoutResult = document.getElementById("checkoutResult");
+// ======================================================
+// CHECKOUT TOTAL
+// ======================================================
+
+const checkoutTotal =
+    document.getElementById("checkoutTotal");
 
 function displayCheckoutTotal() {
 
     if (!checkoutTotal) return;
 
-    const cart =
-        JSON.parse(localStorage.getItem("freshbiteCart")) || [];
+    const totals = calculateCartTotal();
 
-    let subtotal = 0;
-
-    cart.forEach(function(item) {
-        subtotal += item.price * item.quantity;
-    });
-
-    const delivery = cart.length > 0 ? 39 : 0;
-    const total = subtotal + delivery;
-
-    checkoutTotal.textContent = "₹" + total;
-}
-
-displayCheckoutTotal();
-
-
-// ===============================
-// PLACE ORDER
-// ===============================
-// PLACE SIMULATED ORDER
-// ===============================
-
-const checkoutForm = document.getElementById("checkoutForm");
-const checkoutResult = document.getElementById("checkoutResult");
-const checkoutTotal = document.getElementById("checkoutTotal");
-
-function getCart() {
-    return JSON.parse(localStorage.getItem("freshbiteCart")) || [];
+    checkoutTotal.textContent =
+        "₹" + totals.total;
 }
 
 
-// Show cart total on checkout page
-function showCheckoutTotal() {
+// ======================================================
+// CHECKOUT FORM
+// ======================================================
 
-    if (!checkoutTotal) return;
+const checkoutForm =
+    document.getElementById("checkoutForm");
 
-    const cart = getCart();
+const checkoutResult =
+    document.getElementById("checkoutResult");
 
-    let subtotal = 0;
-
-    cart.forEach(function(item) {
-        subtotal += item.price * item.quantity;
-    });
-
-    const delivery = cart.length > 0 ? 39 : 0;
-    const total = subtotal + delivery;
-
-    checkoutTotal.textContent = "₹" + total;
-}
-
-showCheckoutTotal();
-
-
-// Place order
-                    // ===============================
-// PLACE ORDER
-// ===============================
 
 if (checkoutForm) {
 
-    checkoutForm.addEventListener("submit", function(event) {
+    checkoutForm.addEventListener("submit", function (event) {
 
         event.preventDefault();
 
-        // Get current cart
-        const cart = JSON.parse(
-            localStorage.getItem("freshbiteCart")
-        ) || [];
 
-        // Check cart
+        // Get cart
+        const cart = getCart();
+
+
+        // Check empty cart
         if (cart.length === 0) {
 
             checkoutResult.innerHTML = `
+
                 <div class="notice">
+
                     <h3>🛒 Your cart is empty</h3>
-                    <p>Please add food from the menu first.</p>
-                    <a href="menu.html"
-                       class="btn btn-primary"
-                       style="margin-top:10px;">
-                       Go to Menu
+
+                    <p>
+                        Please add food before placing your order.
+                    </p>
+
+                    <a
+                        href="menu.html"
+                        class="btn btn-primary"
+                        style="margin-top:10px">
+                        Go to Menu
                     </a>
+
                 </div>
+
             `;
 
             return;
         }
 
+
         // Calculate total
-        let subtotal = 0;
+        const totals = calculateCartTotal();
 
-        cart.forEach(function(item) {
-            subtotal += Number(item.price) * Number(item.quantity);
-        });
-
-        const delivery = 39;
-        const total = subtotal + delivery;
 
         // Create order ID
         const orderId =
-            "FB" + Math.floor(100000 + Math.random() * 900000);
+            "FB" +
+            Math.floor(
+                100000 +
+                Math.random() * 900000
+            );
 
-        // Save order
+
+        // Create order object
         const order = {
+
             orderId: orderId,
+
             items: cart,
-            subtotal: subtotal,
-            delivery: delivery,
-            total: total,
+
+            subtotal: totals.subtotal,
+
+            delivery: totals.delivery,
+
+            total: totals.total,
+
             date: new Date().toLocaleString()
+
         };
 
-        // Save latest order
+
+        // Save order
         localStorage.setItem(
-            "freshbiteLatestOrder",
+            "freshbiteLastOrder",
             JSON.stringify(order)
         );
 
-        // Save to order history
-        let orders =
-            JSON.parse(localStorage.getItem("freshbiteOrders")) || [];
 
-        orders.push(order);
+        // Save order history
+        const orderHistory =
+            JSON.parse(
+                localStorage.getItem("freshbiteOrders")
+            ) || [];
+
+        orderHistory.unshift(order);
 
         localStorage.setItem(
             "freshbiteOrders",
-            JSON.stringify(orders)
+            JSON.stringify(orderHistory)
         );
+
 
         // Clear cart
         localStorage.removeItem("freshbiteCart");
 
+
         // Update cart number
         updateCartCount();
 
+
         // Show confirmation
         checkoutResult.innerHTML = `
-            <div class="notice" style="margin-top:20px;">
 
-                <h2>🎉 Order Confirmed!</h2>
+            <div class="notice"
+                 style="margin-top:20px">
 
-                <p>Your order has been placed successfully.</p>
+                <h3>🎉 Order Confirmed!</h3>
+
+                <p>
+                    Your simulated order has been placed successfully.
+                </p>
 
                 <p>
                     <strong>Order ID:</strong>
@@ -621,167 +642,149 @@ if (checkoutForm) {
 
                 <p>
                     <strong>Order Total:</strong>
-                    ₹${total}
+                    ₹${totals.total}
                 </p>
 
                 <p>
                     <strong>Delivery:</strong>
-                    30–40 minutes
+                    ₹${totals.delivery}
                 </p>
 
-                <a href="menu.html"
-                   class="btn btn-primary"
-                   style="margin-top:15px;">
-                   Order More Food
-                </a>
-
-                <a href="index.html"
-                   class="btn btn-secondary"
-                   style="margin-top:10px;">
-                   Back to Home
+                <a
+                    href="index.html"
+                    class="btn btn-primary"
+                    style="margin-top:15px">
+                    Back to Home
                 </a>
 
             </div>
+
         `;
 
-        // Change displayed amount
-        if (checkoutTotal) {
-            checkoutTotal.textContent = "₹0";
-        }
 
         // Reset form
         checkoutForm.reset();
 
+
+        // Update checkout amount
+        checkoutTotal.textContent = "₹0";
+
     });
-
 }
-                   
-// ===============================
-// ORDER HISTORY
-// ===============================
 
-const ordersList =
-    document.getElementById("ordersList");
+
+// ======================================================
+// ORDER HISTORY
+// ======================================================
+
+const orderList =
+    document.getElementById("orderList");
+
 
 function displayOrders() {
 
-    if (!ordersList) return;
+    if (!orderList) return;
 
     const orders =
-        JSON.parse(localStorage.getItem("freshbiteOrders")) || [];
+        JSON.parse(
+            localStorage.getItem("freshbiteOrders")
+        ) || [];
 
-    // No orders
+
+    orderList.innerHTML = "";
+
+
     if (orders.length === 0) {
 
-        ordersList.innerHTML = `
-            <div class="card">
-                <div class="empty">
+        orderList.innerHTML = `
 
-                    <h3>No orders yet 🛒</h3>
+            <div class="empty">
 
-                    <p>
-                        Your previous orders will appear here.
-                    </p>
+                <h3>No orders yet</h3>
 
-                    <a href="menu.html"
-                       class="btn btn-primary"
-                       style="margin-top:15px;">
-                        Browse Menu
-                    </a>
+                <p>
+                    Your confirmed orders will appear here.
+                </p>
 
-                </div>
+                <a
+                    href="menu.html"
+                    class="btn btn-primary"
+                    style="margin-top:15px">
+                    Browse Menu
+                </a>
+
             </div>
+
         `;
 
         return;
     }
 
 
-    ordersList.innerHTML = "";
-
-
-    orders.forEach(function(order) {
+    orders.forEach(function (order) {
 
         let itemsHTML = "";
 
-        order.items.forEach(function(item) {
+
+        order.items.forEach(function (item) {
 
             itemsHTML += `
+
                 <p>
                     ${item.name}
                     × ${item.quantity}
-                    — ₹${item.price * item.quantity}
+                    = ₹${item.price * item.quantity}
                 </p>
-            `;
 
+            `;
         });
 
 
-        ordersList.innerHTML += `
+        orderList.innerHTML += `
 
             <div class="card"
                  style="
-                    padding:22px;
+                    padding:20px;
                     margin-bottom:20px;
                  ">
 
+                <h3>
+                    🎉 Order Confirmed
+                </h3>
+
+                <p>
+                    <strong>Order ID:</strong>
+                    ${order.orderId}
+                </p>
+
+                <p class="small">
+                    ${order.date}
+                </p>
+
                 <div style="
-                    display:flex;
-                    justify-content:space-between;
-                    gap:15px;
-                    flex-wrap:wrap;
+                    margin-top:15px;
+                    padding-top:15px;
+                    border-top:1px solid var(--border);
                 ">
 
-                    <div>
+                    <strong>Items</strong>
 
-                        <span class="badge green">
-                            ${order.status}
-                        </span>
-
-                        <h2 style="
-                            margin-top:8px;
-                            font-size:1.4rem;
-                        ">
-                            Order #${order.orderId}
-                        </h2>
-
-                        <p class="small">
-                            ${order.date}
-                        </p>
-
-                    </div>
-
-
-                    <div style="
-                        text-align:right;
-                    ">
-
-                        <p class="small">
-                            Order Total
-                        </p>
-
-                        <strong style="
-                            font-size:1.3rem;
-                        ">
-                            ₹${order.total}
-                        </strong>
-
+                    <div style="margin-top:10px">
+                        ${itemsHTML}
                     </div>
 
                 </div>
 
-
                 <div style="
-                    border-top:1px solid var(--border);
                     margin-top:15px;
                     padding-top:15px;
+                    border-top:1px solid var(--border);
                 ">
 
-                    <h3>
-                        Items
-                    </h3>
-
-                    ${itemsHTML}
+                    <p>
+                        <strong>Total:</strong>
+                        ₹${order.total}
+                    </p>
 
                 </div>
 
@@ -791,4 +794,13 @@ function displayOrders() {
     });
 }
 
+
+// ======================================================
+// INITIAL LOAD
+// ======================================================
+
+displayFoods();
+displayCart();
+displayCheckoutTotal();
 displayOrders();
+updateCartCount();
