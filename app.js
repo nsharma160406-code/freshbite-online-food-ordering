@@ -91,7 +91,128 @@ const foods = [
     }
 ];
 
+// ======================================================
+// RESTAURANT DATA
+// ======================================================
 
+const restaurants = [
+    {
+        name: "Himachal Rasoi",
+        cuisine: "North Indian",
+        rating: "4.5",
+        time: "25–35 min",
+        location: "Hamirpur"
+    },
+    {
+        name: "Pizza Corner",
+        cuisine: "Pizza & Fast Food",
+        rating: "4.4",
+        time: "20–30 min",
+        location: "Hamirpur"
+    },
+    {
+        name: "Momo House",
+        cuisine: "Momos & Chinese",
+        rating: "4.3",
+        time: "20–30 min",
+        location: "Hamirpur"
+    },
+    {
+        name: "Biryani Junction",
+        cuisine: "Biryani & Indian",
+        rating: "4.6",
+        time: "30–40 min",
+        location: "Hamirpur"
+    },
+    {
+        name: "The Food Hub",
+        cuisine: "Multi-Cuisine",
+        rating: "4.2",
+        time: "25–35 min",
+        location: "Hamirpur"
+    },
+    {
+        name: "Cafe FreshBite",
+        cuisine: "Cafe & Snacks",
+        rating: "4.4",
+        time: "15–25 min",
+        location: "Hamirpur"
+    }
+];
+
+
+// ======================================================
+// DISPLAY RESTAURANTS
+// ======================================================
+
+const restaurantGrid =
+    document.getElementById("restaurantGrid");
+
+function displayRestaurants() {
+
+    if (!restaurantGrid) return;
+
+    restaurantGrid.innerHTML = "";
+
+    restaurants.forEach(function (restaurant) {
+
+        const card = document.createElement("div");
+
+        card.className = "card";
+
+        card.innerHTML = `
+            <div style="
+                height:180px;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                background:#fff0e8;
+                font-size:70px;
+            ">
+                🍽️
+            </div>
+
+            <div class="card-body">
+
+                <span class="badge green">
+                    Open
+                </span>
+
+                <h3>${restaurant.name}</h3>
+
+                <p class="small">
+                    ${restaurant.cuisine}
+                </p>
+
+                <div class="meta" style="margin-top:12px">
+
+                    <span>
+                        ⭐ ${restaurant.rating}
+                    </span>
+
+                    <span>
+                        🕐 ${restaurant.time}
+                    </span>
+
+                </div>
+
+                <p class="small" style="margin-top:10px">
+                    📍 ${restaurant.location}
+                </p>
+
+                <a
+                    href="menu.html"
+                    class="btn btn-primary"
+                    style="margin-top:10px;width:100%;text-align:center">
+                    View Menu
+                </a>
+
+            </div>
+        `;
+
+        restaurantGrid.appendChild(card);
+    });
+        }
 // ======================================================
 // GET CART
 // ======================================================
