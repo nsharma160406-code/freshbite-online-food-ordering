@@ -1,4 +1,4 @@
-// ======================================================
+0// ======================================================
 // FRESHBITE - COMPLETE APP.JS
 // ======================================================
 
@@ -924,4 +924,5 @@ displayFoods();
 displayCart();
 displayCheckoutTotal();
 displayOrders();
+displayRestaurants();
 updateCartCount();
