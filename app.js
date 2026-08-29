@@ -526,13 +526,20 @@ showCheckoutTotal();
 
 
 // Place order
+                    // ===============================
+// PLACE ORDER
+// ===============================
+
 if (checkoutForm) {
 
     checkoutForm.addEventListener("submit", function(event) {
 
         event.preventDefault();
 
-        const cart = getCart();
+        // Get current cart
+        const cart = JSON.parse(
+            localStorage.getItem("freshbiteCart")
+        ) || [];
 
         // Check cart
         if (cart.length === 0) {
@@ -540,7 +547,7 @@ if (checkoutForm) {
             checkoutResult.innerHTML = `
                 <div class="notice">
                     <h3>🛒 Your cart is empty</h3>
-                    <p>Please add food before placing your order.</p>
+                    <p>Please add food from the menu first.</p>
                     <a href="menu.html"
                        class="btn btn-primary"
                        style="margin-top:10px;">
@@ -552,22 +559,19 @@ if (checkoutForm) {
             return;
         }
 
-
-        // Calculate amount
+        // Calculate total
         let subtotal = 0;
 
         cart.forEach(function(item) {
-            subtotal += item.price * item.quantity;
+            subtotal += Number(item.price) * Number(item.quantity);
         });
 
         const delivery = 39;
         const total = subtotal + delivery;
 
-
         // Create order ID
         const orderId =
             "FB" + Math.floor(100000 + Math.random() * 900000);
-
 
         // Save order
         const order = {
@@ -579,37 +583,50 @@ if (checkoutForm) {
             date: new Date().toLocaleString()
         };
 
+        // Save latest order
         localStorage.setItem(
             "freshbiteLatestOrder",
             JSON.stringify(order)
         );
 
+        // Save to order history
+        let orders =
+            JSON.parse(localStorage.getItem("freshbiteOrders")) || [];
+
+        orders.push(order);
+
+        localStorage.setItem(
+            "freshbiteOrders",
+            JSON.stringify(orders)
+        );
 
         // Clear cart
         localStorage.removeItem("freshbiteCart");
 
+        // Update cart number
         updateCartCount();
-
 
         // Show confirmation
         checkoutResult.innerHTML = `
             <div class="notice" style="margin-top:20px;">
+
                 <h2>🎉 Order Confirmed!</h2>
 
+                <p>Your order has been placed successfully.</p>
+
                 <p>
-                    Your simulated order has been placed successfully.
+                    <strong>Order ID:</strong>
+                    ${orderId}
                 </p>
 
                 <p>
-                    <strong>Order ID:</strong> ${orderId}
+                    <strong>Order Total:</strong>
+                    ₹${total}
                 </p>
 
                 <p>
-                    <strong>Order Total:</strong> ₹${total}
-                </p>
-
-                <p>
-                    <strong>Delivery:</strong> 30–40 minutes
+                    <strong>Delivery:</strong>
+                    30–40 minutes
                 </p>
 
                 <a href="menu.html"
@@ -623,19 +640,22 @@ if (checkoutForm) {
                    style="margin-top:10px;">
                    Back to Home
                 </a>
+
             </div>
         `;
 
+        // Change displayed amount
+        if (checkoutTotal) {
+            checkoutTotal.textContent = "₹0";
+        }
 
-        // Update checkout amount
-        checkoutTotal.textContent = "₹0";
-
-
-        // Prevent submitting again
+        // Reset form
         checkoutForm.reset();
 
     });
+
 }
+                   
 // ===============================
 // ORDER HISTORY
 // ===============================
